@@ -80,7 +80,7 @@ Ensure the following tools are installed:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-repo/project-init.git ~/scripts/project_init
+   git clone https://github.com/your-repo/project-init.git ~/project_init
    ```
 
 2. Update the `config.conf` file:
@@ -90,7 +90,8 @@ Ensure the following tools are installed:
 3. Ensure all scripts are executable:
 
    ```bash
-   chmod +x ~/scripts/project_init/**/*.sh
+   chmod +x ~/project_init/**/*.sh
+   chmod +x ~/project_init/git-init-repo/git-init-repo
    ```
 
 ---
@@ -102,7 +103,7 @@ Ensure the following tools are installed:
 Run the `project_setup.sh` script without arguments to use the interactive mode:
 
 ```bash
-./project_setup.sh
+~/project_setup.sh
 ```
 
 You will be prompted for the following inputs:
@@ -119,13 +120,13 @@ You will be prompted for the following inputs:
 Run the script with arguments for automation:
 
 ```bash
-./project_setup.sh -t <project-type> -n <project-name> [-d <project-directory>] [-g <git-solution>] [--no-remote] [--setup-cicd]
+~/project_setup.sh -t <project-type> -n <project-name> [-d <project-directory>] [-g <git-solution>] [--no-remote] [--setup-cicd]
 ```
 
 **Example**:
 
 ```bash
-./project_setup.sh -t drupal -n my_drupal_project --setup-cicd
+~/project_setup.sh -t drupal -n my_drupal_project --setup-cicd
 ```
 
 ---

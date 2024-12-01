@@ -4,7 +4,7 @@ set -euo pipefail
 trap 'echo "An error occurred during Drupal setup. Check logs for details."; exit 1;' ERR
 
 # Source configuration file
-CONFIG_FILE="$HOME/scripts/project_init/config.conf"
+CONFIG_FILE="$HOME/project_init/config.conf"
 if [ -f "$CONFIG_FILE" ]; then
     source "$CONFIG_FILE"
 else
@@ -172,7 +172,7 @@ fi
 # Step 8: Initialize Git repository
 if [ "$INIT_REMOTE" = "yes" ]; then
     echo "Initializing Git repository..."
-    "$HOME/scripts/project_init/git-init-repo/git-init-repo" "$PROJECT_DIR" "$GIT_SOLUTION" || {
+    "$HOME/project_init/git-init-repo/git-init-repo" "$PROJECT_DIR" "$GIT_SOLUTION" || {
         echo "Error initializing Git repository."
         exit 1
     }

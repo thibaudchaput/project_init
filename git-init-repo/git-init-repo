@@ -3,7 +3,7 @@ set -euo pipefail
 trap 'echo "An error occurred during Git repository initialization. Exiting..."; exit 1;' ERR
 
 # Source configuration file
-CONFIG_FILE="$HOME/scripts/project_init/config.conf"
+CONFIG_FILE="$HOME/project_init/config.conf"
 if [ -f "$CONFIG_FILE" ]; then
     source "$CONFIG_FILE"
 else

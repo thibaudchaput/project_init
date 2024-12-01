@@ -3,7 +3,7 @@ set -euo pipefail
 trap 'echo "An error occurred. Exiting..."; exit 1;' ERR
 
 # Source configuration file
-CONFIG_FILE="$HOME/scripts/project_init/config.conf"
+CONFIG_FILE="$HOME/project_init/config.conf"
 if [ -f "$CONFIG_FILE" ]; then
     source "$CONFIG_FILE"
 else
@@ -34,7 +34,7 @@ SETUP_CICD="${4:-$SETUP_CICD}"
 # Initialize Git repository and remote if required
 if [ "$INIT_REMOTE" = "yes" ]; then
     echo "Initializing Git repository in '$PROJECT_DIR' with '$GIT_SOLUTION'..."
-    "$HOME/scripts/project_init/git-init-repo/git-init-repo" "$PROJECT_DIR" "$GIT_SOLUTION"
+    "$HOME/project_init/git-init-repo/git-init-repo" "$PROJECT_DIR" "$GIT_SOLUTION"
 else
     echo "Skipping remote repository initialization."
     # Initialize local Git repository without remote

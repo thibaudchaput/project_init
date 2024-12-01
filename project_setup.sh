@@ -3,7 +3,7 @@ set -euo pipefail
 trap 'echo "An error occurred. Exiting..."; exit 1;' ERR
 
 # Source configuration file
-CONFIG_FILE="$HOME/scripts/project_init/config.conf"
+CONFIG_FILE="$HOME/project_init/config.conf"
 if [ -f "$CONFIG_FILE" ]; then
     source "$CONFIG_FILE"
 else
@@ -102,12 +102,12 @@ case "$GIT_SOLUTION" in
         ;;
 esac
 
+# Debug output for variables
+echo "Project name: $PROJECT_NAME"
 echo "Project directory: $PROJECT_DIR"
+echo "Git solution: $GIT_SOLUTION"
 echo "Initialize remote repository: $INIT_REMOTE"
 echo "Set up CI/CD pipeline: $SETUP_CICD"
-
-# Set script directory
-SCRIPT_DIR="$HOME/scripts/project_init"
 
 # Determine the setup script to call
 case "$PROJECT_TYPE" in
