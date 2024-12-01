@@ -1,0 +1,115 @@
+#!/bin/bash
+set -euo pipefail
+trap 'echo "An error occurred during Git repository initialization. Exiting..."; exit 1;' ERR
+
+# Source configuration file
+CONFIG_FILE="$HOME/scripts/project_init/config.conf"
+if [ -f "$CONFIG_FILE" ]; then
+    source "$CONFIG_FILE"
+else
+    echo "Error: Configuration file '$CONFIG_FILE' not found."
+    exit 1
+fi
+
+# Function to display usage
+usage() {
+    echo "Usage: git-init-repo <project-directory> [git-solution]"
+    exit 1
+}
+
+# Check for the project directory argument
+if [ -z "${1-}" ]; then
+    usage
+fi
+
+PROJECT_DIR="$1"
+GIT_SOLUTION="${2:-$DEFAULT_GIT_SOLUTION}"
+
+# Create and navigate to the project directory
+if mkdir -p "$PROJECT_DIR"; then
+    echo "Created directory '$PROJECT_DIR'."
+else
+    echo "Error: Failed to create directory '$PROJECT_DIR'."
+    exit 1
+fi
+
+cd "$PROJECT_DIR" || { echo "Error: Cannot navigate to directory '$PROJECT_DIR'."; exit 1; }
+
+# Initialize a new Git repository
+if git init; then
+    echo "Initialized empty Git repository in $(pwd)/.git/"
+else
+    echo "Error: Failed to initialize Git repository."
+    exit 1
+fi
+
+# Copy template files into the working directory
+TEMPLATE_DIR="$HOME/.git-templates/skel"
+if [ ! -d "$TEMPLATE_DIR" ]; then
+    echo "Error: Template directory '$TEMPLATE_DIR' does not exist. Please ensure the directory exists and try again."
+    exit 1
+fi
+
+if cp -r "$TEMPLATE_DIR"/. .; then
+    echo "Copied template files from '$TEMPLATE_DIR'."
+else
+    echo "Error: Failed to copy template files."
+    exit 1
+fi
+
+# Stage and commit the template files
+if git add . && git commit -m "Initialize repository with template files"; then
+    echo "Committed template files to repository."
+else
+    echo "Error: Failed to commit template files."
+    exit 1
+fi
+
+# Extract repository name from project directory
+REPO_NAME=$(basename "$PROJECT_DIR")
+
+# Handle different git solutions
+case "$GIT_SOLUTION" in
+    github)
+        echo "Creating a remote repository on GitHub..."
+
+        # Ensure 'gh' is installed
+        if ! command -v gh &> /dev/null; then
+            echo "Error: 'gh' command not found. Please install it from https://cli.github.com/"
+            exit 1
+        fi
+
+        # Create a new repository on GitHub using 'gh' without pushing code
+        if gh repo create "$REPO_NAME" --private -y; then
+            echo "Remote repository created on GitHub."
+        else
+            echo "Error: Failed to create repository on GitHub."
+            exit 1
+        fi
+
+        ;;
+    gitlab)
+        echo "Creating a remote repository on GitLab..."
+
+        # Ensure 'glab' is installed
+        if ! command -v glab &> /dev/null; then
+            echo "Error: 'glab' command not found. Please install it from https://gitlab.com/gitlab-org/cli"
+            exit 1
+        fi
+
+        # Create a new repository on GitLab using 'glab' without pushing code
+        if glab repo create "$REPO_NAME" --private -y; then
+            echo "Remote repository created on GitLab."
+        else
+            echo "Error: Failed to create repository on GitLab."
+            exit 1
+        fi
+
+        ;;
+    *)
+        echo "Error: Unsupported git solution '$GIT_SOLUTION'"
+        exit 1
+        ;;
+esac
+
+echo "Repository '$PROJECT_DIR' initialized successfully with remote on $GIT_SOLUTION."
